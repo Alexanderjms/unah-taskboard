@@ -2,7 +2,14 @@ import { type Tarea, formatFecha, formatHora, getDiasRestantes, badgeColor } fro
 
 export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
   return (
-    <div className="animate-scale-in w-full overflow-hidden rounded-xs border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm">
+    <div className="animate-scale-in w-full overflow-hidden rounded-xs border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm custom-scroll">
+      <style>{`
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.4); }
+        .custom-scroll { scrollbar-width: thin; scrollbar-color: rgba(99,102,241,0.25) transparent; }
+      `}</style>
       <div className="flex flex-col">
         <div className="grid grid-cols-[200px_1fr_180px] gap-x-4 border-b border-white/[0.06] px-5 py-4">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
@@ -16,7 +23,7 @@ export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
           </span>
         </div>
 
-        <div className="overflow-y-auto" style={{ scrollbarGutter: "stable" }}>
+        <div className="overflow-y-auto custom-scroll" style={{ scrollbarGutter: "stable" }}>
           {tareas.map((t, i) => {
             const fecha = new Date(t.fecha);
             const dias = getDiasRestantes(fecha);
