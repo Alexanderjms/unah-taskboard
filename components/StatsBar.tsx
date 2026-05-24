@@ -1,4 +1,4 @@
-import { formatFechaCorta, getDiasRestantes } from "@/lib/types";
+import { formatFechaCorta } from "@/lib/types";
 
 interface StatsBarProps {
   totalTareas: number;
@@ -11,11 +11,10 @@ export default function StatsBar({ totalTareas, totalClases, proximaEntrega }: S
     ["Tareas", totalTareas, "text-white"],
     ["Clases", totalClases, "text-white"],
     ["Próxima", proximaEntrega ? formatFechaCorta(proximaEntrega) : "—", "text-cyan-400 text-sm"],
-    ["Quedan", proximaEntrega ? getDiasRestantes(proximaEntrega) : "—", "text-white"],
   ];
 
   return (
-    <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div className="mb-8 grid grid-cols-3 gap-3">
       {stats.map(([label, value, cls], i) => (
         <div
           key={label}
