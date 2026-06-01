@@ -6,20 +6,28 @@ import {
   badgeColor,
 } from "@/lib/types";
 
-export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
+export default function TaskTable({
+  tareas,
+  onToggleCompletada,
+}: {
+  tareas: Tarea[];
+  onToggleCompletada: (id: number, completada: boolean) => void;
+}) {
   return (
     <div className="animate-scale-in w-full overflow-hidden rounded-xs border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm custom-scroll">
       <style>{`
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar { width: 0; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.4); }
-        .custom-scroll { scrollbar-width: thin; scrollbar-color: rgba(99,102,241,0.25) transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: transparent; }
+        .custom-scroll { scrollbar-width: none; scrollbar-color: transparent transparent; }
       `}</style>
 
       {/* --- Table (md+) --- */}
       <div className="hidden md:flex md:flex-col">
-        <div className="grid grid-cols-[200px_1fr_180px] gap-x-4 border-b border-white/[0.06] px-5 py-4">
+        <div className="grid grid-cols-[40px_200px_1fr_180px] gap-x-4 border-b border-white/[0.06] px-5 py-4">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
+            ✓
+          </span>
           <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
             Clase
           </span>
@@ -42,9 +50,18 @@ export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
             return (
               <div
                 key={i}
-                className="animate-fade-slide-in grid grid-cols-[200px_1fr_180px] gap-x-4 border-b border-white/[0.03] px-5 py-3.5 text-sm transition-all duration-200 hover:bg-white/[0.04] hover:shadow-[inset_0_0_20px_rgba(99,102,241,0.06)]"
-                style={{ animationDelay: `${i * 60}ms` }}
+                className={`grid grid-cols-[40px_200px_1fr_180px] gap-x-4 items-center border-b border-white/[0.03] px-5 py-3.5 text-sm transition-all duration-200 hover:bg-white/[0.04] hover:shadow-[inset_0_0_20px_rgba(99,102,241,0.06)] ${
+                  t.completada ? "opacity-50" : ""
+                }`}
               >
+                <div className="flex items-center justify-start">
+                  <input
+                    type="checkbox"
+                    checked={t.completada}
+                    onChange={(e) => onToggleCompletada(t.id, e.target.checked)}
+                    className="h-4 w-4 cursor-pointer accent-indigo-500"
+                  />
+                </div>
                 <div className="flex items-center">
                   <span
                     className={`inline-block rounded-xs border px-2.5 py-0.5 text-[11px] font-bold leading-5 ${badgeColor(t.clase)}`}
@@ -53,7 +70,13 @@ export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <span className="break-words text-sm font-medium leading-snug text-white/80">
+                  <span
+                    className={`break-words text-sm font-medium leading-snug ${
+                      t.completada
+                        ? "line-through text-white/50"
+                        : "text-white/80"
+                    }`}
+                  >
                     {t.actividad}
                   </span>
                 </div>
@@ -76,7 +99,6 @@ export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
         </div>
       </div>
 
-      {/* --- Cards (< md) --- */}
       <div className="flex flex-col gap-3 p-3 md:hidden">
         {tareas.map((t, i) => {
           const fecha = new Date(t.fecha);
@@ -85,15 +107,24 @@ export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
           return (
             <div
               key={i}
-              className="animate-fade-slide-in rounded-xs border border-white/[0.06] bg-white/[0.03] p-4 backdrop-blur-sm transition-all duration-200 hover:bg-white/[0.06]"
-              style={{ animationDelay: `${i * 60}ms` }}
+              className={`rounded-xs border border-white/[0.06] bg-white/[0.03] p-4 backdrop-blur-sm transition-all duration-200 hover:bg-white/[0.06] ${
+                t.completada ? "opacity-50" : ""
+              }`}
             >
               <div className="mb-3 flex items-center justify-between">
-                <span
-                  className={`inline-block rounded-xs border px-2.5 py-0.5 text-[11px] font-bold leading-5 ${badgeColor(t.clase)}`}
-                >
-                  {t.clase}
-                </span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={t.completada}
+                    onChange={(e) => onToggleCompletada(t.id, e.target.checked)}
+                    className="h-4 w-4 cursor-pointer accent-indigo-500"
+                  />
+                  <span
+                    className={`inline-block rounded-xs border px-2.5 py-0.5 text-[11px] font-bold leading-5 ${badgeColor(t.clase)}`}
+                  >
+                    {t.clase}
+                  </span>
+                </div>
                 {dias <= 2 && dias >= 0 && (
                   <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400/70">
                     {dias === 0 ? "Hoy" : `${dias}d`}
@@ -101,7 +132,11 @@ export default function TaskTable({ tareas }: { tareas: Tarea[] }) {
                 )}
               </div>
 
-              <p className="mb-3 text-sm font-medium leading-snug text-white/80">
+              <p
+                className={`mb-3 text-sm font-medium leading-snug ${
+                  t.completada ? "line-through text-white/50" : "text-white/80"
+                }`}
+              >
                 {t.actividad}
               </p>
 

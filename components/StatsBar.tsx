@@ -26,8 +26,7 @@ export default function StatsBar({
       {stats.map(([label, value, cls], i) => (
         <div
           key={label}
-          className="animate-fade-in rounded-xs border border-white/[0.06] bg-white/[0.03] p-4 backdrop-blur-sm transition-all duration-200 hover:border-white/10 hover:bg-white/[0.06]"
-          style={{ animationDelay: `${i * 80}ms` }}
+          className="rounded-xs border border-white/[0.06] bg-white/[0.03] p-4 backdrop-blur-sm transition-all duration-200 hover:border-white/10 hover:bg-white/[0.06]"
         >
           <p className="text-[10px] font-semibold uppercase tracking-wider text-white/30">
             {label}

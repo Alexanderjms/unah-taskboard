@@ -1,7 +1,9 @@
 export interface Tarea {
+  id: number;
   clase: string;
   actividad: string;
   fecha: string;
+  completada: boolean;
 }
 
 export function getDiasRestantes(fecha: Date) {
@@ -39,5 +41,7 @@ const CLASE_COLORS: Record<string, string> = {
 };
 
 export function badgeColor(clase: string) {
-  return CLASE_COLORS[clase] || "bg-gray-500/20 text-gray-300 border-gray-500/30";
+  return (
+    CLASE_COLORS[clase] || "bg-gray-500/20 text-gray-300 border-gray-500/30"
+  );
 }
